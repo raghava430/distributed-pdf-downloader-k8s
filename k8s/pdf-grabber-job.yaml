@@ -1,0 +1,52 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: pdf-grabber
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: pdf-grabber-job
+  namespace: pdf-grabber
+spec:
+  parallelism: 5
+  completions: 5
+  completionMode: Indexed
+  backoffLimit: 2
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: pdf-grabber
+          image: your-dockerhub-username/pdf-grabber:v1
+          env:
+            - name: POD_INDEX
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.annotations['batch.kubernetes.io/job-completion-index']
+            - name: POD_COUNT
+              value: "5"
+            - name: TOTAL_URLS
+              value: "50"
+            - name: PARALLEL_DOWNLOADS
+              value: "1"
+            - name: OCI_NAMESPACE
+              value: "replace-with-your-oci-namespace"
+            - name: OCI_BUCKET
+              value: "replace-with-your-bucket-name"
+            - name: OCI_PREFIX
+              value: "downloads"
+          resources:
+            requests:
+              memory: "1Gi"
+              cpu: "500m"
+            limits:
+              memory: "2Gi"
+              cpu: "1000m"
+          volumeMounts:
+            - name: config-volume
+              mountPath: /app/input
+      volumes:
+        - name: config-volume
+          configMap:
+            name: pdf-grabber-config
