@@ -29,8 +29,7 @@ WORKDIR /app
 COPY Docker/requirements.txt ./requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt 
 
-COPY ../code/attachment_downloader_docker.py .
-COPY ../input/urls.xlsx /app/input/urls.xlsx
+COPY app/attachment_downloader_docker.py .
 
 RUN mkdir -p /app/input /app/downloads /tmp
 

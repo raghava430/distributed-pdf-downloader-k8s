@@ -1,0 +1,25 @@
+# Local/private setup notes
+docs/setup/
+*.docx
+
+# Input data
+input/*.xlsx
+input/*.xls
+!input/.gitkeep
+
+# Downloaded/generated files
+downloads/*
+!downloads/.gitkeep
+
+# Logs
+docs/logs/
+*.log
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Environment files
+.env
+.venv/
+venv/
